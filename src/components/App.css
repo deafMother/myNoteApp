@@ -89,6 +89,15 @@ a {
   color: #ccc;
 }
 
+.moveOut {
+  transform: translateX(-150%);
+  transition: transform 300ms ease;
+}
+
+.moveIn {
+  transform: translateX(0);
+}
+
 @media (max-width: 700px) {
   .container {
     padding: 0.3rem;

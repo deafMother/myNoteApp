@@ -4,11 +4,13 @@ import allNotes from './allNotes';
 import getNoteType from './getNoteType';
 import getSingleNote from './getSingleNote';
 import getLoading from './getLoading';
+import getNetwork from './getNetwork';
 
 export default combineReducers({
   create: createNote,
   notes: allNotes,
   list: getNoteType,
   note: getSingleNote,
-  loading: getLoading
+  loading: getLoading,
+  net: getNetwork
 });
