@@ -1,9 +1,19 @@
 .notes-category-items {
-    display: felx;
-    flex-wrap: nowrap;
+  display: flex;
+  flex-direction: column;
 }
 
 .notes-category-items .button {
+  margin: 0 0.4rem 0.3rem 0;
+  padding: 0.2rem 0.6rem;
+}
+
+@media (min-width: 700px) {
+  .notes-category-items {
+    flex-direction: row;
+  }
+  .notes-category-items .button {
     margin: 0 0.4rem 0 0;
     padding: 0.2rem 0.6rem;
+  }
 }
