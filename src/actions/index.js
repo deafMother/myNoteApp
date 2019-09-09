@@ -11,20 +11,19 @@ export const createNote = status => {
 
 // fetch all the notes
 export const fetchNotes = () => async dispatch => {
-  console.log(true);
-  const response = await axios.get('/notes');
+  const response = await axios.get('/notes.json');
+  const newData = convertObjectToArray(response);
   dispatch({
     type: 'LOAD_NOTES',
-    payload: response.data
+    payload: newData
   });
-  console.log(false);
 };
 
 // add a new note
 export const addNote = note => async dispatch => {
   note.id = uid.v4();
   note.createdAt = Date.now();
-  const response = await axios.post('/notes', note);
+  const response = await axios.post('/notes.json', note);
 
   dispatch({
     type: 'ADD_NOTE',
@@ -35,8 +34,9 @@ export const addNote = note => async dispatch => {
 
 // get  notes of eact type
 export const getNotesType = type => async dispatch => {
-  const response = await axios.get('/notes');
-  const noteType = response.data.filter(note => note.type === type);
+  const response = await axios.get('/notes.json');
+  const newData = convertObjectToArray(response);
+  const noteType = newData.filter(note => note.type === type);
   dispatch({
     type: 'GET_LIST_TYPE',
     payload: noteType
@@ -45,7 +45,7 @@ export const getNotesType = type => async dispatch => {
 
 // get a single note
 export const fetchNote = id => async dispatch => {
-  const response = await axios.get(`/notes/${id}`);
+  const response = await axios.get(`/notes/${id}.json`);
   //console.log(response.data);
   dispatch({
     type: 'LOAD_SINGLE_NOTE',
@@ -55,10 +55,7 @@ export const fetchNote = id => async dispatch => {
 
 // edit a note
 export const editNote = (id, note) => async dispatch => {
-  const response = await axios.patch(`/notes/${id}`, note);
-
-  console.log(response.data);
-
+  const response = await axios.patch(`/notes/${id}.json`, note);
   // currently there is no reducer for this action as it is not required
   dispatch({
     type: 'NOTE_EDITED',
@@ -70,7 +67,7 @@ export const editNote = (id, note) => async dispatch => {
 
 // remove note
 export const deleteNote = id => async dispatch => {
-  await axios.delete(`/notes/${id}`);
+  await axios.delete(`/notes/${id}.json`);
   // currently there is no reducer for this action as it is not required
   dispatch({
     type: 'NOTE_DELETED'
@@ -81,9 +78,22 @@ export const deleteNote = id => async dispatch => {
 
 // loading, can be use to keep tract of loading
 export const loading = status => {
-  console.log(status);
   return {
     type: 'LOADING',
     payload: status
   };
+};
+
+const convertObjectToArray = response => {
+  let newData = [];
+
+  if (response.data) {
+    const keys = Object.keys(response.data);
+    const values = Object.values(response.data);
+    newData = values.map((item, index) => {
+      item.id = keys[index];
+      return item;
+    });
+  }
+  return newData;
 };
