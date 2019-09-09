@@ -1,0 +1,14 @@
+.create-note-form {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 3px #ccc;
+    border: 1px solid #eee;
+    padding: 10px;
+}
+
+.create-note-form input, .create-note-form textarea, .select {
+    border-radius: 4px;
+    padding: 0.3rem;
+    border: 1px solid rgb(197, 182, 182);
+    width: 100%;
+}

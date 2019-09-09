@@ -1,0 +1,11 @@
+.single__note-ctn {
+    box-shadow: 0 2px 3px #ccc;
+    border: 1px solid #eee;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.time-stamp {
+    font-size: 0.7rem;
+    color: #ccc;
+}
