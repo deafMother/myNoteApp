@@ -29,6 +29,11 @@ export const fetchNotes = () => async dispatch => {
 export const addNote = note => async dispatch => {
   note.id = uid.v4();
   note.createdAt = Date.now();
+  const popup = {
+    message: 'Note Successfully Created',
+    error: false,
+    show: true
+  };
   try {
     network(true);
     const response = await axios.post('/notes.json', note);
@@ -39,8 +44,17 @@ export const addNote = note => async dispatch => {
   } catch (err) {
     console.log('no network');
     network(false);
+    popup.message = 'Error adding note !';
+    popup.error = true;
   }
   history.push('/');
+  console.log(popup.show);
+  dispatch(displayPopUp(popup));
+
+  setTimeout(() => {
+    popup.show = false;
+    dispatch(displayPopUp(popup));
+  }, 4000);
 };
 
 // get  notes of eact type
@@ -78,6 +92,11 @@ export const fetchNote = id => async dispatch => {
 
 // edit a note
 export const editNote = (id, note) => async dispatch => {
+  const popup = {
+    message: 'Changes Saved',
+    error: false,
+    show: true
+  };
   try {
     network(true);
     const response = await axios.patch(`/notes/${id}.json`, note);
@@ -89,13 +108,26 @@ export const editNote = (id, note) => async dispatch => {
   } catch (err) {
     console.log('no network');
     network(false);
+    popup.message = 'Error Editing note !';
+    popup.error = true;
   }
 
   history.push('/');
+  dispatch(displayPopUp(popup));
+
+  setTimeout(() => {
+    popup.show = false;
+    dispatch(displayPopUp(popup));
+  }, 4000);
 };
 
 // remove note
 export const deleteNote = id => async dispatch => {
+  const popup = {
+    message: 'Note Deleted',
+    error: false,
+    show: true
+  };
   try {
     network(true);
     await axios.delete(`/notes/${id}.json`);
@@ -106,9 +138,17 @@ export const deleteNote = id => async dispatch => {
   } catch (err) {
     console.log('no network');
     network(false);
+    popup.message = 'Error Deleting note !';
+    popup.error = true;
   }
 
   history.push('/');
+  dispatch(displayPopUp(popup));
+
+  setTimeout(() => {
+    popup.show = false;
+    dispatch(displayPopUp(popup));
+  }, 4000);
 };
 
 // loading, can be use to keep tract of loading
@@ -121,9 +161,23 @@ export const loading = status => {
 
 // network status, can be use to keep tract of network connection
 export const network = status => {
-  console.log(status);
   return {
     type: 'NETWORK',
+    payload: status
+  };
+};
+
+//  message type will be an obeject
+const displayPopUp = message => {
+  return {
+    type: 'POPUP',
+    payload: message
+  };
+};
+
+const hidePopUp = status => {
+  return {
+    type: 'POPUP_HIDE',
     payload: status
   };
 };

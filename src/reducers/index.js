@@ -5,6 +5,7 @@ import getNoteType from './getNoteType';
 import getSingleNote from './getSingleNote';
 import getLoading from './getLoading';
 import getNetwork from './getNetwork';
+import getPopUp from './getPopUp';
 
 export default combineReducers({
   create: createNote,
@@ -12,5 +13,6 @@ export default combineReducers({
   list: getNoteType,
   note: getSingleNote,
   loading: getLoading,
-  net: getNetwork
+  net: getNetwork,
+  popup: getPopUp
 });

@@ -1,0 +1,17 @@
+.popup {
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+    transition: transform 400ms linear 300ms;
+    height: 0;
+    overflow: hidden;
+}
+
+.hide-pop-up {
+    transform: translateX(-100%);
+}
+
+.show-pop-up {
+    height: auto;
+    transform: translateX(0);
+}

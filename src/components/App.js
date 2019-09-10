@@ -13,6 +13,8 @@ import Personal from './Lists/Personal';
 import Uncat from './Lists/UnCat';
 import EditNote from './EditNote/EditNote';
 import NetWorkError from './Error/NetWorkError';
+import PopUp from '../components/PopUp/PopUp';
+
 import './App.css';
 
 // the history prop is only available inside the Route componnents
@@ -22,6 +24,9 @@ class App extends React.Component {
     return (
       <Router history={history}>
         <Header network={this.props.network} />
+        <div className='pop-up-ctn container'>
+          <PopUp />
+        </div>
         {this.props.network ? (
           <Switch>
             <Route path='/' exact component={NotesSelection} />
