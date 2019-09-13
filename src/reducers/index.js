@@ -6,6 +6,8 @@ import getSingleNote from './getSingleNote';
 import getLoading from './getLoading';
 import getNetwork from './getNetwork';
 import getPopUp from './getPopUp';
+import getLoggedIN from './loggedIn';
+import { reducer as formReducer } from 'redux-form';
 
 export default combineReducers({
   create: createNote,
@@ -14,5 +16,7 @@ export default combineReducers({
   note: getSingleNote,
   loading: getLoading,
   net: getNetwork,
-  popup: getPopUp
+  popup: getPopUp,
+  loggedIn: getLoggedIN,
+  form: formReducer
 });

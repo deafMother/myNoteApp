@@ -11,27 +11,29 @@ export class Header extends Component {
       <div className='header__ctn-item'>
         <div className='header__ctn'>
           <div className='header'>Notz</div>
-          {!this.props.create ? (
-            <button
-              className='button'
-              onClick={() => {
-                this.props.createNote(true);
-                history.push('/createNote');
-              }}
-            >
-              Create
-            </button>
-          ) : (
-            <button
-              className='button'
-              onClick={() => {
-                this.props.createNote(false);
-                history.push('/');
-              }}
-            >
-              Back
-            </button>
-          )}
+          {this.props.loggedIn ? (
+            !this.props.create ? (
+              <button
+                className='button'
+                onClick={() => {
+                  this.props.createNote(true);
+                  history.push('/createNote');
+                }}
+              >
+                Create
+              </button>
+            ) : (
+              <button
+                className='button'
+                onClick={() => {
+                  this.props.createNote(false);
+                  history.push('/');
+                }}
+              >
+                Back
+              </button>
+            )
+          ) : null}
         </div>
       </div>
     );

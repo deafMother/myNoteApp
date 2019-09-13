@@ -1,6 +1,7 @@
 import axios from '../api/fetch-notes';
 import uid from 'uuid';
 import history from '../history';
+import bcrypt from 'bcryptjs';
 
 export const createNote = status => {
   return {
@@ -159,6 +160,107 @@ export const loading = status => {
   };
 };
 
+// add user to database, add the crypted password
+export const addNewUser = formvalue => async dispatch => {
+  const popup = {
+    message: 'User Added',
+    error: false,
+    show: true
+  };
+
+  // bcrypt
+  // salt is used to hash the password, 10 is the default round value
+  const salt = await bcrypt.genSalt(10);
+
+  // now create the hash
+  formvalue.password1 = await bcrypt.hash(formvalue.password1, salt);
+  formvalue.password2 = formvalue.password1;
+
+  try {
+    const users = await axios.get('/users.json');
+    console.log(users.data);
+    if (users.data) {
+      if (
+        Object.values(users.data).find(
+          user =>
+            user.username.toLowerCase() === formvalue.username.toLowerCase()
+        )
+      ) {
+        // user already registered
+        popup.message = 'User Already Exists';
+        popup.error = true;
+      } else {
+        const user = await axios.post('/users.json', formvalue);
+        // dispatch successfully registered
+      }
+    } else {
+      //  no users so can add the new user
+      const user = await axios.post('/users.json', formvalue);
+    }
+  } catch (err) {
+    popup.message = 'network error!';
+    popup.error = true;
+  }
+  history.push('/');
+  dispatch(displayPopUp(popup));
+
+  setTimeout(() => {
+    popup.show = false;
+    dispatch(displayPopUp(popup));
+  }, 4000);
+};
+
+// login user, pop up yet to be implemented
+export const LoginIn = formValues => async dispatch => {
+  const popup = {
+    message: 'Logged In',
+    error: false,
+    show: true
+  };
+  const status = false;
+  try {
+    const users = await axios.get('/users.json');
+
+    if (users) {
+      const hashedPassword = Object.values(users).find(
+        user => user.name === formValues.name
+      ).password;
+      // if user exists in the database
+      if (hashedPassword) {
+        const isMatch = await bcrypt.compare(
+          formValues.password,
+          hashedPassword
+        );
+
+        if (isMatch) {
+          console.log('Match');
+          status = true;
+        } else {
+          console.log('Not Match');
+        }
+      } else {
+        popup.message = 'please check user name or register';
+        popup.error = true;
+      }
+    } else {
+      // now users in database
+      popup.message = 'user not registered, please register';
+      popup.error = true;
+    }
+  } catch (err) {}
+
+  dispatch(isLoggedIn(status));
+  history.push('/');
+};
+
+// action createor for logged in
+export const isLoggedIn = status => {
+  return {
+    type: 'LOGGEN_IN',
+    payload: status
+  };
+};
+
 // network status, can be use to keep tract of network connection
 export const network = status => {
   return {
@@ -172,13 +274,6 @@ const displayPopUp = message => {
   return {
     type: 'POPUP',
     payload: message
-  };
-};
-
-const hidePopUp = status => {
-  return {
-    type: 'POPUP_HIDE',
-    payload: status
   };
 };
 

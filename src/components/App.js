@@ -14,6 +14,8 @@ import Uncat from './Lists/UnCat';
 import EditNote from './EditNote/EditNote';
 import NetWorkError from './Error/NetWorkError';
 import PopUp from '../components/PopUp/PopUp';
+import LogIn from './LogIN/LogIn';
+import Register from './LogIN/SIGNIN_REG/REGISTER/Register';
 
 import './App.css';
 
@@ -23,11 +25,11 @@ class App extends React.Component {
   render() {
     return (
       <Router history={history}>
-        <Header network={this.props.network} />
+        <Header network={this.props.network} loggedIn={this.props.loggedIn} />
         <div className='pop-up-ctn container'>
           <PopUp />
         </div>
-        {this.props.network ? (
+        {this.props.network && this.props.loggedIn ? (
           <Switch>
             <Route path='/' exact component={NotesSelection} />
             <Route path='/createNote' exact component={CreateNote} />
@@ -39,17 +41,24 @@ class App extends React.Component {
             <Route path={`/uncategorided`} exact component={Uncat} />
             <Route path={`/edit/:id`} exact component={EditNote} />
           </Switch>
-        ) : (
+        ) : !this.props.network ? (
           <NetWorkError />
+        ) : (
+          <Switch>
+            <Route path={`/`} exact component={LogIn} />
+            <Route path={`/register`} exact component={Register} />
+          </Switch>
         )}
       </Router>
     );
   }
 }
 
-const mapStateToProps = ({ net }) => {
+const mapStateToProps = ({ net, loggedIn }) => {
+  console.log(loggedIn);
   return {
-    network: net
+    network: net,
+    loggedIn: loggedIn
   };
 };
 

@@ -1,0 +1,10 @@
+.Form {
+    text-align: right;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.Form button {
+    margin-left: 6px;
+    vertical-align: middle;
+}
