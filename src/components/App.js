@@ -60,7 +60,7 @@ const mapStateToProps = ({ net, loggedIn }) => {
   console.log(loggedIn);
   return {
     network: net,
-    loggedIn: loggedIn
+    loggedIn: loggedIn.status
   };
 };
 

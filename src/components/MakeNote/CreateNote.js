@@ -10,7 +10,8 @@ export class CreateNote extends Component {
     title: '',
     description: '',
     type: 'uncategory',
-    createdAt: 0
+    createdAt: 0,
+    username: this.props.username
   };
 
   submitFormData = e => {
@@ -68,6 +69,10 @@ export class CreateNote extends Component {
     );
   };
 
+  componentWillUnmount = () => {
+    this.props.createNote(false);
+  };
+
   render() {
     return <div className='container'>{this.renderForm()}</div>;
   }
@@ -78,7 +83,13 @@ CreateNote.propTypes = {
   createNote: PropTypes.func.isRequired
 };
 
+const mapStateToProps = ({ loggedIn }) => {
+  return {
+    username: loggedIn.username
+  };
+};
+
 export default connect(
-  null,
+  mapStateToProps,
   { addNote, createNote }
 )(CreateNote);

@@ -11,11 +11,15 @@ export const createNote = status => {
 };
 
 // fetch all the notes
-export const fetchNotes = () => async dispatch => {
+export const fetchNotes = () => async (dispatch, getState) => {
   try {
     dispatch(network(true));
     const response = await axios.get('/notes.json');
-    const newData = convertObjectToArray(response);
+    console.log(getState().loggedIn.username);
+    const newData = convertObjectToArray(
+      response,
+      getState().loggedIn.username
+    );
     dispatch({
       type: 'LOAD_NOTES',
       payload: newData
@@ -49,7 +53,6 @@ export const addNote = note => async dispatch => {
     popup.error = true;
   }
   history.push('/');
-  console.log(popup.show);
   dispatch(displayPopUp(popup));
 
   setTimeout(() => {
@@ -59,11 +62,14 @@ export const addNote = note => async dispatch => {
 };
 
 // get  notes of eact type
-export const getNotesType = type => async dispatch => {
+export const getNotesType = type => async (dispatch, getState) => {
   try {
     network(true);
     const response = await axios.get('/notes.json');
-    const newData = convertObjectToArray(response);
+    const newData = convertObjectToArray(
+      response,
+      getState().loggedIn.username
+    );
     const noteType = newData.filter(note => note.type === type);
     dispatch({
       type: 'GET_LIST_TYPE',
@@ -215,7 +221,10 @@ export const LoginIn = formValues => async dispatch => {
     error: false,
     show: true
   };
-  let status = false;
+  let status = {
+    status: false,
+    username: null
+  };
   try {
     const users = await axios.get('/users.json');
     // if users exists check compare to check if the particular user is there or not
@@ -232,7 +241,8 @@ export const LoginIn = formValues => async dispatch => {
         );
 
         if (isMatch) {
-          status = true;
+          status.status = true;
+          status.username = formValues.username;
         } else {
           popup.message = 'incorrect passoword';
           popup.error = true;
@@ -257,6 +267,7 @@ export const LoginIn = formValues => async dispatch => {
 
   setTimeout(() => {
     popup.show = false;
+    popup.error = false;
     dispatch(displayPopUp(popup));
   }, 4000);
 };
@@ -284,16 +295,27 @@ const displayPopUp = message => {
   };
 };
 
-const convertObjectToArray = response => {
+const convertObjectToArray = (response, username) => {
   let newData = [];
-
   if (response.data) {
     const keys = Object.keys(response.data);
     const values = Object.values(response.data);
-    newData = values.map((item, index) => {
-      item.id = keys[index];
-      return item;
-    });
+    newData = values
+      .map((item, index) => {
+        item.id = keys[index];
+        return item;
+      })
+      .filter(note => note.username === username);
   }
+  // if (newData) {
+  //   console.log(newData);
+
+  //   return newData;
+  // } else {
+  //   console.log(newData);
+
+  //   return [];
+  // }
+
   return newData;
 };

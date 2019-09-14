@@ -1,7 +1,12 @@
-const getLoggenIn = (loggenIn = false, action) => {
+const initialState = {
+  status: false,
+  username: null
+};
+
+const getLoggenIn = (loggenIn = initialState, action) => {
   switch (action.type) {
     case 'LOGGEN_IN':
-      return action.payload;
+      return { ...action.payload };
     default:
       return loggenIn;
   }
