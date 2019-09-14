@@ -16,6 +16,7 @@ import NetWorkError from './Error/NetWorkError';
 import PopUp from '../components/PopUp/PopUp';
 import LogIn from './LogIN/LogIn';
 import Register from './LogIN/SIGNIN_REG/REGISTER/Register';
+import SignIn from './LogIN/SIGNIN_REG/SIGNIN/SignIn';
 
 import './App.css';
 
@@ -47,6 +48,7 @@ class App extends React.Component {
           <Switch>
             <Route path={`/`} exact component={LogIn} />
             <Route path={`/register`} exact component={Register} />
+            <Route path={`/signin`} exact component={SignIn} />
           </Switch>
         )}
       </Router>

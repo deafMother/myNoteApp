@@ -171,14 +171,12 @@ export const addNewUser = formvalue => async dispatch => {
   // bcrypt
   // salt is used to hash the password, 10 is the default round value
   const salt = await bcrypt.genSalt(10);
-
   // now create the hash
   formvalue.password1 = await bcrypt.hash(formvalue.password1, salt);
   formvalue.password2 = formvalue.password1;
 
   try {
     const users = await axios.get('/users.json');
-    console.log(users.data);
     if (users.data) {
       if (
         Object.values(users.data).find(
@@ -217,26 +215,27 @@ export const LoginIn = formValues => async dispatch => {
     error: false,
     show: true
   };
-  const status = false;
+  let status = false;
   try {
     const users = await axios.get('/users.json');
-
-    if (users) {
-      const hashedPassword = Object.values(users).find(
-        user => user.name === formValues.name
-      ).password;
+    // if users exists check compare to check if the particular user is there or not
+    if (users.data) {
+      const hashedPassword = Object.values(users.data).find(
+        user => user.username === formValues.username
+      );
       // if user exists in the database
+
       if (hashedPassword) {
         const isMatch = await bcrypt.compare(
           formValues.password,
-          hashedPassword
+          hashedPassword.password1
         );
 
         if (isMatch) {
-          console.log('Match');
           status = true;
         } else {
-          console.log('Not Match');
+          popup.message = 'incorrect passoword';
+          popup.error = true;
         }
       } else {
         popup.message = 'please check user name or register';
@@ -247,12 +246,20 @@ export const LoginIn = formValues => async dispatch => {
       popup.message = 'user not registered, please register';
       popup.error = true;
     }
-  } catch (err) {}
+  } catch (err) {
+    popup.message = 'nework error';
+    popup.error = true;
+  }
 
   dispatch(isLoggedIn(status));
   history.push('/');
-};
+  dispatch(displayPopUp(popup));
 
+  setTimeout(() => {
+    popup.show = false;
+    dispatch(displayPopUp(popup));
+  }, 4000);
+};
 // action createor for logged in
 export const isLoggedIn = status => {
   return {

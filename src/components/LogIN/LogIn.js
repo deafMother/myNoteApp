@@ -16,7 +16,15 @@ class LogIn extends React.Component {
             {' '}
             REGISTER{' '}
           </button>
-          <button className='button primary'> LOGIN </button>
+          <button
+            className='button primary'
+            onClick={() => {
+              history.push('/signin');
+            }}
+          >
+            {' '}
+            LOGIN{' '}
+          </button>
         </div>
       </div>
     );
